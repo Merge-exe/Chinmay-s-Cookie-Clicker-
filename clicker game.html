@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker Game</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ffdf9b, #fbbd61);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+            width: 420px;
+            box-sizing: border-box;
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 42px;
+            color: #6c4f1d;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #6c4f1d;
+        }
+
+        #cookieImage {
+            cursor: pointer;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            animation: spin 10s linear infinite; /* Continuous spin */
+        }
+
+        #cookieImage:hover {
+            transform: scale(1.1);
+        }
+
+        #upgradeSection {
+            margin-top: 30px;
+        }
+
+        .upgrade {
+            background-color: #ffb84d;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 20px;
+            margin: 15px 0;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 80%;
+            transition: background-color 0.2s ease;
+        }
+
+        .upgrade:hover {
+            background-color: #e67e22;
+        }
+
+        .upgrade:disabled {
+            background-color: #d3d3d3;
+            cursor: not-allowed;
+        }
+
+        /* Continuous Spin for the Cookie */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Style for the background cookies */
+        .tiny-cookie {
+            position: absolute;
+            background-image: url('cookie.png'); /* Same cookie image or a smaller one */
+            background-size: cover;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: fallAnimation 5s infinite linear;
+        }
+
+        @keyframes fallAnimation {
+            0% {
+                transform: translateY(-100px) scale(1); /* Start higher and with normal size */
+            }
+            100% {
+                transform: translateY(100vh) scale(0.5); /* End lower with reduced size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tiny Cookies in the background -->
+    <div class="tiny-cookie" style="top: 0; left: 10%; width: 210px; height: 210px; animation-duration: 4s;"></div>
+    <div class="tiny-cookie" style="top: -50px; left: 30%; width: 350px; height: 350px; animation-duration: 6s;"></div>
+    <div class="tiny-cookie" style="top: -200px; left: 60%; width: 280px; height: 280px; animation-duration: 7s;"></div>
+    <div class="tiny-cookie" style="top: -100px; left: 80%; width: 175px; height: 175px; animation-duration: 5s;"></div>
+    <div class="tiny-cookie" style="top: -150px; left: 20%; width: 245px; height: 245px; animation-duration: 6s;"></div>
+
+    <div class="container">
+        <h1>Chinmay's Cookie Clicker</h1>
+        <p id="cookieCount">Cookies: 0</p>
+        
+        <!-- Cookie Image to click -->
+        <img src="cookie.png" alt="Cookie" id="cookieImage">
+        
+        <h2>Upgrades:</h2>
+        <div id="upgradeSection">
+            <button id="upgrade1" class="upgrade">Upgrade 1: +1 cookie per click - 10 cookies</button>
+            <button id="upgrade2" class="upgrade">Upgrade 2: +5 cookies per click - 50 cookies</button>
+        </div>
+    </div>
+
+    <script>
+        let cookieCount = 0; // Initial cookie count
+        let cookiesPerClick = 1; // Start with 1 cookie per click
+        let upgrade1Cost = 10; // Cost of the first upgrade
+        let upgrade2Cost = 50; // Cost of the second upgrade
+
+        // Get HTML elements
+        const cookieCountDisplay = document.getElementById('cookieCount');
+        const cookieImage = document.getElementById('cookieImage');
+        const upgrade1Button = document.getElementById('upgrade1');
+        const upgrade2Button = document.getElementById('upgrade2');
+
+        // Update cookie count display
+        function updateCookieDisplay() {
+            cookieCountDisplay.textContent = `Cookies: ${cookieCount}`;
+        }
+
+        // Handle the cookie click when the image is clicked
+        cookieImage.addEventListener('click', () => {
+            cookieCount += cookiesPerClick;
+            updateCookieDisplay();
+
+            // Optional: Cookie will scale when clicked for fun animation
+            cookieImage.style.transition = "transform 0.2s ease";
+            cookieImage.style.transform = "scale(1.1)";
+            setTimeout(() => {
+                cookieImage.style.transform = "scale(1)";
+            }, 200);
+        });
+
+        // Upgrade 1: Add +1 cookie per click
+        upgrade1Button.addEventListener('click', () => {
+            if (cookieCount >= upgrade1Cost) {
+                cookieCount -= upgrade1Cost;
+                cookiesPerClick += 1;
+                upgrade1Cost = Math.floor(upgrade1Cost * 1.5); // Increase cost for next upgrade
+                upgrade1Button.textContent = `Upgrade 1: +1 cookie per click - ${upgrade1Cost} cookies`;
+                updateCookieDisplay();
+            } else {
+                alert("You don't have enough cookies for this upgrade!");
+            }
+        });
+
+        // Upgrade 2: Add +5 cookies per click
+        upgrade2Button.addEventListener('click', () => {
+            if (cookieCount >= upgrade2Cost) {
+                cookieCount -= upgrade2Cost;
+                cookiesPerClick += 5;
+                upgrade2Cost = Math.floor(upgrade2Cost * 1.5); // Increase cost for next upgrade
+                upgrade2Button.textContent = `Upgrade 2: +5 cookies per click - ${upgrade2Cost} cookies`;
+                updateCookieDisplay();
+            } else {
+                alert("You don't have enough cookies for this upgrade!");
+            }
+        });
+    </script>
+</body>
+</html>
